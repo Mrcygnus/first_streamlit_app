@@ -32,16 +32,18 @@ streamlit.dataframe(fruits_to_show)
 #New section to display fruityivice api response 
 
 streamlit.header('Fruityvice Fruit Advice!')
-fruit_choice = streamlit.text_input('What fruit would you like information about?','Kiwi')
-streamlit.write('The user entered ', fruit_choice)
-#import requests
-fruityvice_response = requests.get(f"https://www.fruityvice.com/api/fruit/{fruit_choice}")
-# parses the json,returns dataframe with keys as columns and values as records
-fruityvice_normalized = pd.json_normalize(fruityvice_response.json())
-# output it to the screen
-streamlit.dataframe(fruityvice_normalized)
-streamlit.stop()
-
+try:
+    fruit_choice = streamlit.text_input('What fruit would you like information about?')
+    
+    if not fruit_choice:
+        streamlit.error("Please select a fruit to get information") 
+    else:
+         fruityvice_response = requests.get(f"https://www.fruityvice.com/api/fruit/{fruit_choice}")
+         fruityvice_normalized = pd.json_normalize(fruityvice_response.json())
+         streamlit.dataframe(fruityvice_normalized)
+except URLError as e:
+    streamlit.error()
+     
 #######################################################################################################################
 ####################### CONNECTING TO SNOWFLAKE USING STREAMLIT SECRETS[TOML FORMAT]..CURSOR CREATION..USING 
 #### THAT CURSOR .EXECUTE SQL STATEMENTS..FETCH VALUES FROM CURSOR OUTPUT IT TO STREAMLIT TO DISPLAY IN THE FORM OF DATAFRAME
