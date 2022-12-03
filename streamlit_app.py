@@ -44,11 +44,12 @@ streamlit.dataframe(fruityvice_normalized)
 import snowflake.connector
 my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
 my_cur = my_cnx.cursor()
-xyz = my_cur.execute("insert into fruit_load_list values('from streamlit')")
+xyz = my_cur.execute("select * from fruit_load_list")
 my_data_row = xyz.fetchall()
 streamlit.header("fruit load list contains:")
 streamlit.dataframe(my_data_row)
 fruits_selected=streamlit.multiselect("Pick some fruits:", list(my_data_row))
+my_cur.execute("insert into fruit_load_list values('from streamlit')")
 
 
 
