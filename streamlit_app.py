@@ -30,6 +30,12 @@ streamlit.dataframe(fruits_to_show)
 #####################   FRUITYVICE FRUIT ADVICE..USER ADDS IN INPUT VALUES..GET REQUEST TO FRUITY VICE API ##########
 # REPONSE IN THE FORM OF JSON..NO KEY REQUIRED #################REQUEsts library used
 #New section to display fruityivice api response 
+#creating a function 
+def get_fruit_vice_data(this_fruit_choice):
+    fruityvice_response = requests.get(f"https://www.fruityvice.com/api/fruit/{this_fruit_choice}")
+    fruityvice_normalized = pd.json_normalize(fruityvice_response.json())
+    return fruityvice_normalized
+
 
 streamlit.header('Fruityvice Fruit Advice!')
 try:
@@ -38,9 +44,8 @@ try:
     if not fruit_choice:
         streamlit.error("Please select a fruit to get information") 
     else:
-         fruityvice_response = requests.get(f"https://www.fruityvice.com/api/fruit/{fruit_choice}")
-         fruityvice_normalized = pd.json_normalize(fruityvice_response.json())
-         streamlit.dataframe(fruityvice_normalized)
+         back_from_function = get_fruit_vice_data(fruit_choice)
+         streamlit.dataframe(back_from_function)
 except URLError as e:
     streamlit.error()
      
